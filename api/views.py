@@ -57,7 +57,7 @@ class AssetTransportationRidesListView(APIView):
 
     def get(self, request, *args, **kwargs):
         requester_requests = AssetTransportRequest.objects.filter(
-            status='pending',
+            # status='pending',
             from_location=request.query_params.get('from_location', None),
             to_location=request.query_params.get('to_location', None),
             date_time=request.query_params.get('date_time', None),
@@ -65,6 +65,7 @@ class AssetTransportationRidesListView(APIView):
         page_index = request.query_params.get('page_index', None)
         page_size = request.query_params.get('page_size', None)
         matched_rides = []
+        # print(requester_requests)
         for requester_request in requester_requests:
             rides = ShareTravelInfo.objects.filter(
                 from_location=requester_request.from_location,
@@ -72,7 +73,7 @@ class AssetTransportationRidesListView(APIView):
                 date_time=requester_request.date_time,
             )
             matched_rides.extend(rides)
-
+        # print(matched_rides)
         data = get_pagination(matched_rides, page_index, page_size)
         serializer = MatchedRidesSerializer(data['queryset'], many=True)
 
